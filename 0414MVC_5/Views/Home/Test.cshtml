@@ -1,0 +1,63 @@
+﻿
+@section scripts{
+    <script>
+
+        $(function () {
+            GetForm();
+            $('#submit').click(function () { $('#submit').attr('disabled', true); SubmitForm(); });
+        });
+
+        function GetForm() {
+            $.ajax({
+                url: '/Home/GetForm',
+                dataType: 'json'
+            }).done(function (e) {
+                console.log('success', e);
+                if (e.Status === true) {
+                    $('#Tilte').val(e.Data.tilte);
+                    $('#Desc').val(e.Data.name);
+                    $('#submit').attr('disabled', false);
+                }
+                else {
+                    alert(e.Message);
+                }
+            }).fail(function (e) {
+                console.log('error', e);
+            }).always(function (e) {
+                console.log('always', e);
+            });
+        }
+
+            function SubmitForm() {
+                $.ajax({
+                    url: '/Home/SubmitForm',
+                    type: 'POST',
+                    data:
+                    {
+                        tilte: $('#Tilte').val(),
+                        Desc: $('#Desc').val(),
+                    },
+                    dataType: 'json'
+                }).done(function (e) {
+                    console.log('success', e);
+                    if (e.Status === true) {
+                        alert('送出成功');
+                    }
+                    else {
+                        alert(e.Message);
+                    }
+                }).fail(function (e) {
+                    console.log('error', e);
+                }).always(function (e) {
+                    console.log('always', e);
+                    $('submit').attr('disabled', false);
+                });
+            }
+    </script>
+    <div>
+        <input type="text" id="Title" />
+        <input type="text" id="Desc" />
+        <button id="submit" disabled>SUMMIT</button>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.0.min.js"></script>
+}
